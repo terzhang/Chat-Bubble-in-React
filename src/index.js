@@ -10,13 +10,13 @@ function App() {
   const ICON_HEIGHT = 100;
 
   const { width, height } = useWindowDimensions();
-  const [removeBubble, setRemoveBubble] = React.useState(false);
   // react-spring hook to animate the xy value with set
   const [{ buubleXY }, set] = useSpring(() => ({
     buubleXY: [width / 2, height / 2]
   }));
 
   const isSnap = x => x > width * 0.65 || x < width * 0.35;
+  const toBubbleBin = y => y > height * 0.7;
 
   // useGesture listens to events: mouseDown, mouseDelta, and velocity
   const gestureBind = useGesture(({ down, delta, xy, velocity }) => {
@@ -35,10 +35,10 @@ function App() {
     }
 
     // determining the region where the bubble will snap to removal bubble.
-    if (y > height * 0.7 && !isSnap(x)) {
-      let rBubbleX = width / 2 - ICON_WIDTH / 2; // take icon width into account
-      let rBubbleY = height * 0.8;
-      newXY = [rBubbleX, rBubbleY];
+    if (toBubbleBin(y) && !isSnap(x)) {
+      let x = width / 2 - ICON_WIDTH / 2; // take icon width into account
+      let y = height * 0.8;
+      newXY = [x, y];
     } else {
       newXY = down ? xy : [x, y];
     }
