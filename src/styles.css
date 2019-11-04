@@ -1,0 +1,39 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  user-select: none;
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir,
+    helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  /*   justify-content: center;
+  align-items: center; */
+}
+
+.bubbleContainer {
+  background-color: aqua;
+  cursor: -webkit-grab;
+  display: table;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  white-space: pre;
+}
+
+.bubble {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
