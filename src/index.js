@@ -21,24 +21,15 @@ function App() {
     // determining the region where the bubble will snap to edge
     let x = xy[0];
     let y = xy[1];
-    let middleFlag = false;
-    let tempX = x;
-    if (x > (width - ICON_WIDTH / 2) * 0.5) {
-      tempX = x;
+    if (x > width * 0.65) {
       x = width * 0.9;
-    } else if (x < (width - ICON_WIDTH / 2) * 0.5) {
-      tempX = x;
+    } else if (x < width * 0.35) {
       x = 0;
-    }
-
-    if (!(tempX > width * 0.55 || tempX < width * 0.45)) {
-      middleFlag = true;
     }
 
     // determining the region where the bubble will snap to removal bubble.
     let newXY;
-
-    if (y > height * 0.75 && middleFlag) {
+    if (y > height * 0.7) {
       let rBubbleX = width / 2 - ICON_WIDTH / 2; // take icon width into account
       let rBubbleY = height * 0.8;
       newXY = [rBubbleX, rBubbleY];
@@ -79,7 +70,7 @@ function App() {
           draggable={false}
         />
       </animated.div>
-      <p>{width + " , " + height}</p>
+      <p>{width + ", " + height}</p>
     </div>
   );
 }
