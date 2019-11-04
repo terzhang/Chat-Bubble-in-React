@@ -1,9 +1,9 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./styles.css";
-import { useSpring, animated } from "react-spring";
-import { useGesture } from "react-with-gesture";
-import useWindowDimensions from "./hooks/useWindowDimension";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './styles.css';
+import { useSpring, animated } from 'react-spring';
+import { useGesture } from 'react-with-gesture';
+import useWindowDimensions from './hooks/useWindowDimension';
 
 function App() {
   const ICON_WIDTH = 100;
@@ -12,7 +12,11 @@ function App() {
   const { width, height } = useWindowDimensions();
   const [removeBubble, setRemoveBubble] = React.useState(false);
   // react-spring hook to animate the xy value with set
-  const [{ buubleXY }, set] = useSpring(() => ({ buubleXY: [0, 0] }));
+  const [{ buubleXY }, set] = useSpring(() => ({
+    buubleXY: [width / 2, height / 2]
+  }));
+
+  const isSnap = x => x > width * 0.65 || x < width * 0.35;
 
   // useGesture listens to events: mouseDown, mouseDelta, and velocity
   const gestureBind = useGesture(({ down, delta, xy, velocity }) => {
@@ -21,15 +25,17 @@ function App() {
     // determining the region where the bubble will snap to edge
     let x = xy[0];
     let y = xy[1];
-    if (x > width * 0.65) {
+    let newXY;
+
+    // assign new x value if near edge
+    if (x > width * 0.6) {
       x = width * 0.9;
-    } else if (x < width * 0.35) {
+    } else if (x < width * 0.4) {
       x = 0;
     }
 
     // determining the region where the bubble will snap to removal bubble.
-    let newXY;
-    if (y > height * 0.7) {
+    if (y > height * 0.7 && !isSnap(x)) {
       let rBubbleX = width / 2 - ICON_WIDTH / 2; // take icon width into account
       let rBubbleY = height * 0.8;
       newXY = [rBubbleX, rBubbleY];
@@ -63,17 +69,17 @@ function App() {
       >
         <img
           className="bubble"
-          src={require("./cat_icon.png")}
+          src={require('./cat_icon.png')}
           width={String(ICON_WIDTH)}
           height={String(ICON_HEIGHT)}
           alt="cat icon"
           draggable={false}
         />
       </animated.div>
-      <p>{width + ", " + height}</p>
+      <p>{width + ', ' + height}</p>
     </div>
   );
 }
 
-const rootElement = document.getElementById("root");
+const rootElement = document.getElementById('root');
 ReactDOM.render(<App />, rootElement);
