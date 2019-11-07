@@ -23,7 +23,7 @@ body {
   background-color: aqua;
   cursor: -webkit-grab;
   display: table;
-  position: relative;
+  position: absolute;
   align-items: center;
   justify-content: center;
   overflow: auto;
@@ -36,4 +36,12 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
+}
+
+.bubbleBin {
+  display: flex;
+  flex-direction: inherit;
+  justify-content: flex-end;
+  align-self: center;
+  align-items: center;
 }

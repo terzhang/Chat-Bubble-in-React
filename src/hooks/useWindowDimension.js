@@ -26,14 +26,14 @@ export default function useWindowDimensions() {
 
     // event listener: when window resizes, call handleResize
     window.addEventListener('resize', handleResize);
-    console.log('listener added');
+    /* console.log('listener added'); */
 
     // on unmount, remove the event listener
     return () => {
-      console.log('listener removed');
+      /* console.log('listener removed'); */
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-  console.log(windowDimensions.width, ' ', windowDimensions.height);
+  /* console.log(windowDimensions.width, ' ', windowDimensions.height); */
   return windowDimensions;
 }
