@@ -4,6 +4,7 @@ import './styles.css';
 import { useSpring, animated } from 'react-spring';
 import { useGesture } from 'react-with-gesture';
 import useWindowDimensions from './hooks/useWindowDimension';
+import { ReactComponent as IconClose } from './assets/icon-close.svg';
 
 function App() {
   const ICON_WIDTH = 100;
@@ -66,7 +67,7 @@ function App() {
   });
 
   return (
-    <div>
+    <div style={{ display: 'flex' }}>
       <animated.div
         className="bubbleContainer"
         // bind is collection of event callbacks, such as onTouchStart, onTouchMove, etc.,
@@ -79,14 +80,19 @@ function App() {
         onContextMenu={e => e.preventDefault()}
       >
         <img
-          className="bubble"
-          src={require('./cat_icon.png')}
+          src={require('./assets/cat_icon.png')}
           width={String(ICON_WIDTH)}
           height={String(ICON_HEIGHT)}
           alt="cat icon"
           draggable={false}
         />
       </animated.div>
+      {/* https://create-react-app.dev/docs/adding-images-fonts-and-files/#adding-svgs */}
+      <IconClose
+        className="bubbleBin"
+        alt="close bubble"
+        viewBox="0 0 100 100"
+      />
     </div>
   );
 }

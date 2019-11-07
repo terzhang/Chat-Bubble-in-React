@@ -15,33 +15,20 @@ body {
   font-size: 12px;
   font-weight: 600;
   display: flex;
-  /*   justify-content: center;
-  align-items: center; */
 }
 
 .bubbleContainer {
-  background-color: aqua;
   cursor: -webkit-grab;
-  display: table;
+  display: flex;
   position: absolute;
-  align-items: center;
-  justify-content: center;
-  overflow: auto;
+  /* align-items: center;
+  justify-content: center; */
+  overflow: visible;
   white-space: pre;
 }
 
-.bubble {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
 .bubbleBin {
-  display: flex;
-  flex-direction: inherit;
-  justify-content: flex-end;
-  align-self: center;
-  align-items: center;
+  display: visible;
+  position: absolute;
+  pointer-events: none;
 }
