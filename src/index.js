@@ -5,6 +5,8 @@ import { useSpring, animated, useTransition, config } from 'react-spring';
 import { useGesture } from 'react-with-gesture';
 import useWindowDimensions from './hooks/useWindowDimension';
 import { ReactComponent as IconClose } from './assets/icon_close.svg';
+import ProfileBubble from './components/ProfileBubble';
+import { flattenDiagnosticMessageText } from 'typescript';
 
 function App() {
   const ICON_WIDTH = 100;
@@ -17,6 +19,7 @@ function App() {
     pos: [0, 0]
   }));
 
+  // transition hook for bubble bin
   const transition = useTransition(mouseDown, null, {
     from: { opacity: 0, top: height },
     enter: { opacity: 1, top: height * 0.8 },
@@ -39,7 +42,7 @@ function App() {
   };
 
   // useGesture listens to events: mouse down, mouse's xy, and velocity
-  const gestureBind = useGesture(({ down, xy, delta }) => {
+  const gestureBind = useGesture(({ down, xy }) => {
     let newXY;
     let [x, y] = xy;
 
@@ -74,45 +77,42 @@ function App() {
     /* console.log(transform.getValue()); */
 
     set({
-      // transform: `translate(${newXY[0]}px, ${newXY[1]}px)`,
       pos: newXY,
       config: newConfig
     });
   });
 
+  // handler for mouse down event
   const handleMouseDown = e => {
     if (!mouseDown) {
       setMouseDown(true);
     }
   };
 
+  // handler for mouse up event
   const handleMouseUp = e => {
     if (mouseDown) {
       setMouseDown(false);
     }
   };
 
+  // return an interpolated position given an animated value
+  const handleTransform = () => {
+    return pos.interpolate((x, y) => `translate(${x}px, ${y}px)`);
+  };
+
   return (
     <div onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
-      <animated.div
-        className="bubbleContainer"
-        // bind is collection of event callbacks, such as onTouchStart, onTouchMove, etc.,
-        // which the hook uses to determine its gestures
-        {...gestureBind()}
-        style={{
-          transform: pos.interpolate((x, y) => `translate(${x}px, ${y}px)`)
+      <ProfileBubble
+        profile={{
+          name: 'Mr.Cat',
+          uri: require('./assets/cat_icon.png'),
+          width: String(ICON_WIDTH),
+          height: String(ICON_HEIGHT)
         }}
-        // prevent default event of bringing up context menu
-        onContextMenu={e => e.preventDefault()}
-      >
-        <img
-          src={require('./assets/cat_icon.png')}
-          width={String(ICON_WIDTH)}
-          height={String(ICON_HEIGHT)}
-          alt="cat icon"
-          draggable={false}
-        />
-      </animated.div>
+        transform={handleTransform}
+        bind={() => gestureBind()}
+      />
       {/* transition animation for bubble bin */}
       {transition.map(
         ({ item, key, props }) =>
