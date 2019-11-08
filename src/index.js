@@ -13,16 +13,9 @@ function App() {
   const [mouseDown, setMouseDown] = React.useState(false);
 
   // react-spring hook: https://www.react-spring.io/docs/hooks/use-spring
-  const [{ transform }, set] = useSpring(() => ({
-    transform: `translate3d(0px,0px,0)`
+  const [{ pos }, set] = useSpring(() => ({
+    pos: [0, 0]
   }));
-
-  /* const [slide, setSlide] = useSpring(() => ({
-    from: { opacity: 0, top: height },
-    to: { opacity: 1 },
-    config: { duration: 2000 },
-    reset: true
-  })); */
 
   const transition = useTransition(mouseDown, null, {
     from: { opacity: 0, top: height },
@@ -46,13 +39,13 @@ function App() {
   };
 
   // useGesture listens to events: mouse down, mouse's xy, and velocity
-  const gestureBind = useGesture(({ down, xy }) => {
+  const gestureBind = useGesture(({ down, xy, delta }) => {
     let newXY;
     let [x, y] = xy;
 
     // determining the region where the bubble will snap to edge
     if (x > width * 0.8) {
-      x = width - ICON_WIDTH;
+      x = width - ICON_WIDTH; // compensate so bubble won't clip
     } else if (x < width * 0.2) {
       x = 0;
     }
@@ -67,7 +60,13 @@ function App() {
       let maxY = height - ICON_HEIGHT;
       let minY = 0;
       y = Math.min(Math.max(parseInt(y), minY), maxY);
-      newXY = down ? xy : [x, y];
+      if (down) {
+        newXY = [xy[0] - ICON_WIDTH / 2, xy[1] - ICON_HEIGHT / 2]; // center bubble to cursor
+      } else if (snapToSide(x)) {
+        newXY = [x, y]; // don't override the snapping algorithm
+      } else {
+        newXY = [x - ICON_WIDTH / 2, y - ICON_HEIGHT / 2]; // center bubble to cursor
+      }
     }
 
     // new spring config according to gesture events: https://www.react-spring.io/docs/hooks/api
@@ -75,7 +74,8 @@ function App() {
     /* console.log(transform.getValue()); */
 
     set({
-      transform: `translate3d(${newXY[0]}px, ${newXY[1]}px, 0)`,
+      // transform: `translate(${newXY[0]}px, ${newXY[1]}px)`,
+      pos: newXY,
       config: newConfig
     });
   });
@@ -100,7 +100,7 @@ function App() {
         // which the hook uses to determine its gestures
         {...gestureBind()}
         style={{
-          transform
+          transform: pos.interpolate((x, y) => `translate(${x}px, ${y}px)`)
         }}
         // prevent default event of bringing up context menu
         onContextMenu={e => e.preventDefault()}
@@ -113,7 +113,7 @@ function App() {
           draggable={false}
         />
       </animated.div>
-      {/* https://create-react-app.dev/docs/adding-images-fonts-and-files/#adding-svgs */}
+      {/* transition animation for bubble bin */}
       {transition.map(
         ({ item, key, props }) =>
           item && (
